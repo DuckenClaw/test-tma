@@ -1,30 +1,52 @@
-<p align="center">
-  <br>
-  <img width="240" src="./src/assets/tapps.png" alt="logo of telegram web apps">
-  <br>
-  <br>
-</p>
+# twa-template
 
-# Telegram Mini Apps(TMA) + React + TypeScript + Vite
+> Starter template for a new TWA interacting with the TON blockchain
 
-Vite (which means "fast" in French) is a front-end build tool and development server that aims to provide a faster and leaner development experience for modern web projects. We will utilise Vite to create Telegram Mini App example.
+# Overview
 
-This template provides a minimal setup to get TMA working in Vite with React, TypeScript, HMR and some ESLint rules.
+The project is highly-opinionated, and there are many other alternate routes it could have taken. Some examples:
 
-## Usage
+- Supports Ton Connect 2 wallets
+- Uses vite with react (alternative to create-react-app)
+- Uses the `ton` npm package
 
-```bash
-# npm
-npm install
-npm run dev --host
-```
-```bash
-# yarn
-yarn
-yarn dev --host
-```
+# Prerequesities
 
-# Links
-- [Doc](https://docs.ton.org/develop/dapps/twa)
-- [Example TMA](https://t.me/vite_twa_example_bot/app)
-- [Link](https://twa-dev.github.io/vite-boilerplate/)
+- Node.js v16 (other versions may work, needs more testing)
+- A TON Connect compatible wallet (e.g. [Tonkeeper](https://tonkeeper.com/))
+
+# What does this repo contain?
+
+- A react-based TWA-ready app, interacting with TON
+- Github actions set to deploy app to github pages
+- A script to connect a telegram bot to the deployed app
+
+# How to use
+
+1. Create a template from this repo with the "Use this template" button
+
+   1. Choose a name for your repo
+   2. `**IMPORTANT!!**` mark "Include all branches", otherwise github pages deployment will not work.
+      ![image](https://user-images.githubusercontent.com/5641469/191731317-14e742fd-accb-47d4-a794-fad01148a377.png)
+
+2. Clone this repo and run `yarn`
+
+3. Create a new bot with [botfather](https://t.me/botfather)
+   1. Type `/newbot`
+   2. Choose a name for your bot, e.g. `My Ton TWA`
+   3. Choose a username for your bot, e.g. `my_ton_twa_482765_bot`
+   4. Take note of the access token, e.g. `5712441624:AAHmiHvwrrju1F3h29rlVOZLRLnv-B8ZZZ`
+   5. Run `yarn configbot` to link your bot to the webapp
+
+# Development
+
+1. Run `npm run dev` and edit the code as needed
+2. On push to the `main` branch, the app will be automatically deployed via github actions.
+
+# Roadmap
+
+- [ ] Jetton transfer support
+
+# License
+
+MIT
