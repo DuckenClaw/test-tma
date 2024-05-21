@@ -7,6 +7,13 @@ import { Address, OpenedContract } from "ton-core";
 import { useQuery } from "@tanstack/react-query";
 import { CHAIN } from "@tonconnect/protocol";
 
+const MAINNET_ADDRESS = import.meta.env.VITE_COUNTER_MAINNET || '';
+const TESTNET_ADDRESS = import.meta.env.VITE_COUNTER_TESTNET || '';
+
+if (!MAINNET_ADDRESS || !TESTNET_ADDRESS) {
+  console.error("Environment variables for contract addresses are not defined");
+}
+
 export function useCounterContract() {
   const { client } = useTonClient();
   const { sender, network } = useTonConnect();
@@ -16,8 +23,8 @@ export function useCounterContract() {
     const contract = new Counter(
       Address.parse(
         network === CHAIN.MAINNET
-          ? "EQBPEDbGdwaLv1DKntg9r6SjFIVplSaSJoJ-TVLe_2rqBOmH"
-          : "EQBYLTm4nsvoqJRvs_L-IGNKwWs5RKe19HBK_lFadf19FUfb"
+        ? MAINNET_ADDRESS
+        : TESTNET_ADDRESS
       ) // replace with your address from tutorial 2 step 8
     );
     return client.open(contract) as OpenedContract<Counter>;

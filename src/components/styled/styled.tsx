@@ -29,7 +29,8 @@ export const Button = styled.button`
   border: 0;
   border-radius: 8px;
   padding: 10px 20px;
-  color: var(--tg-theme-button-text-color);
+  color: ${(props) =>
+    props.disabled ? "#cccccc" : "var(--tg-theme-button-text-color)"};
   font-weight: 700;
   cursor: pointer;
   pointer-events: ${(props) => (props.disabled ? "none" : "inherit")};
