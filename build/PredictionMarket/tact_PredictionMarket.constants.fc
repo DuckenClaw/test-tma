@@ -1,0 +1,2 @@
+;; Comment "Pool is locked"
+cell __gen_cell_comment_861f32ca5829ce3ca26cb5c9d52933eb8c9d1037bb0530e41c46d1d2720cc69d() asm "B{b5ee9c7241010101001400002400000000506f6f6c206973206c6f636b65647cd8968e} B>boc PUSHREF";

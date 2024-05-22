@@ -1,0 +1,248 @@
+#pragma version =0.4.4;
+#pragma allow-post-modification;
+#pragma compute-asm-ltr;
+
+#include "tact_PredictionMarket.headers.fc";
+#include "tact_PredictionMarket.stdlib.fc";
+#include "tact_PredictionMarket.constants.fc";
+#include "tact_PredictionMarket.storage.fc";
+
+;;
+;; Contract PredictionMarket functions
+;;
+
+((slice, slice, int, int, int, cell, int, int, int), ()) $PredictionMarket$_fun_accept_prize_pool((slice, slice, int, int, int, cell, int, int, int) $self, int $expected_amount) impure inline_ref {
+    var (($self'owner, $self'terms, $self'resolutionTime, $self'entries_limit, $self'pool_locked, $self'event_entries, $self'prize_pool, $self'lockTime, $self'created_at)) = $self;
+    var ($ctx'bounced, $ctx'sender, $ctx'value, $ctx'raw) = __tact_context_get();
+    int $remainValue = (($ctx'value - $expected_amount) - $Context$_fun_readForwardFee(($ctx'bounced, $ctx'sender, $ctx'value, $ctx'raw)));
+    throw_unless(35641, ($remainValue >= 0));
+    $self'prize_pool = $self'prize_pool + $expected_amount;
+    $global_send($SendParameters$_constructor_to_bounce_value_mode($ctx'sender, true, $remainValue, 2));
+    return (($self'owner, $self'terms, $self'resolutionTime, $self'entries_limit, $self'pool_locked, $self'event_entries, $self'prize_pool, $self'lockTime, $self'created_at), ());
+}
+
+(slice, slice, int, int, int, cell, int, int, int) $PredictionMarket$_contract_init(slice $owner, (slice, int, int, int) $config) impure inline_ref {
+    var (($config'terms, $config'prize_pool, $config'resolutionTime, $config'entries_limit)) = $config;
+    var (($self'owner, $self'terms, $self'resolutionTime, $self'entries_limit, $self'pool_locked, $self'event_entries, $self'prize_pool, $self'lockTime, $self'created_at)) = (null(), null(), null(), 1000, false, null(), null(), null(), null());
+    $self'owner = $owner;
+    $self'created_at = now();
+    $self'event_entries = null();
+    $self'terms = $config'terms;
+    $self'prize_pool = 0;
+    $self'entries_limit = $config'entries_limit;
+    $self'resolutionTime = $config'resolutionTime;
+    ($self'owner, $self'terms, $self'resolutionTime, $self'entries_limit, $self'pool_locked, $self'event_entries, $self'prize_pool, $self'lockTime, $self'created_at)~$PredictionMarket$_fun_accept_prize_pool($config'prize_pool);
+    return ($self'owner, $self'terms, $self'resolutionTime, $self'entries_limit, $self'pool_locked, $self'event_entries, $self'prize_pool, $self'lockTime, $self'created_at);
+}
+
+((slice, slice, int, int, int, cell, int, int, int), int) $PredictionMarket$_fun_balance((slice, slice, int, int, int, cell, int, int, int) $self) impure inline_ref {
+    var (($self'owner, $self'terms, $self'resolutionTime, $self'entries_limit, $self'pool_locked, $self'event_entries, $self'prize_pool, $self'lockTime, $self'created_at)) = $self;
+    return (($self'owner, $self'terms, $self'resolutionTime, $self'entries_limit, $self'pool_locked, $self'event_entries, $self'prize_pool, $self'lockTime, $self'created_at), __tact_my_balance());
+}
+
+((slice, slice, int, int, int, cell, int, int, int), int) $PredictionMarket$_fun_prize_pool((slice, slice, int, int, int, cell, int, int, int) $self) impure inline_ref {
+    var (($self'owner, $self'terms, $self'resolutionTime, $self'entries_limit, $self'pool_locked, $self'event_entries, $self'prize_pool, $self'lockTime, $self'created_at)) = $self;
+    return (($self'owner, $self'terms, $self'resolutionTime, $self'entries_limit, $self'pool_locked, $self'event_entries, $self'prize_pool, $self'lockTime, $self'created_at), $self'prize_pool);
+}
+
+((slice, slice, int, int, int, cell, int, int, int), ()) $PredictionMarket$_fun_requireOwner((slice, slice, int, int, int, cell, int, int, int) $self) impure inline_ref {
+    var (($self'owner, $self'terms, $self'resolutionTime, $self'entries_limit, $self'pool_locked, $self'event_entries, $self'prize_pool, $self'lockTime, $self'created_at)) = $self;
+    throw_unless(132, ( __tact_slice_eq_bits($self'owner, __tact_context_get_sender()) ));
+    return (($self'owner, $self'terms, $self'resolutionTime, $self'entries_limit, $self'pool_locked, $self'event_entries, $self'prize_pool, $self'lockTime, $self'created_at), ());
+}
+
+((slice, slice, int, int, int, cell, int, int, int), slice) $PredictionMarket$_fun_owner((slice, slice, int, int, int, cell, int, int, int) $self) impure inline_ref {
+    var (($self'owner, $self'terms, $self'resolutionTime, $self'entries_limit, $self'pool_locked, $self'event_entries, $self'prize_pool, $self'lockTime, $self'created_at)) = $self;
+    return (($self'owner, $self'terms, $self'resolutionTime, $self'entries_limit, $self'pool_locked, $self'event_entries, $self'prize_pool, $self'lockTime, $self'created_at), $self'owner);
+}
+
+((slice, slice, int, int, int, cell, int, int, int), (int, slice, slice, int, int, int, cell, int, int)) $PredictionMarket$_fun_full_stats((slice, slice, int, int, int, cell, int, int, int) $self) impure inline_ref {
+    var (($self'owner, $self'terms, $self'resolutionTime, $self'entries_limit, $self'pool_locked, $self'event_entries, $self'prize_pool, $self'lockTime, $self'created_at)) = $self;
+    return (($self'owner, $self'terms, $self'resolutionTime, $self'entries_limit, $self'pool_locked, $self'event_entries, $self'prize_pool, $self'lockTime, $self'created_at), $EventStats$_constructor_created_at_owner_terms_resolutionTime_entries_limit_pool_locked_event_entries_prize_pool_lockTime($self'created_at, $self'owner, $self'terms, $self'resolutionTime, $self'entries_limit, $self'pool_locked, $self'event_entries, $self'prize_pool, $self'lockTime));
+}
+
+;;
+;; Receivers of a Contract PredictionMarket
+;;
+
+(((slice, slice, int, int, int, cell, int, int, int)), ()) %$PredictionMarket$_internal_empty((slice, slice, int, int, int, cell, int, int, int) $self) impure inline {
+    var ($self'owner, $self'terms, $self'resolutionTime, $self'entries_limit, $self'pool_locked, $self'event_entries, $self'prize_pool, $self'lockTime, $self'created_at) = $self;
+    return (($self'owner, $self'terms, $self'resolutionTime, $self'entries_limit, $self'pool_locked, $self'event_entries, $self'prize_pool, $self'lockTime, $self'created_at), ());
+}
+
+(((slice, slice, int, int, int, cell, int, int, int)), ()) $PredictionMarket$_internal_binary_EventConfigMessage((slice, slice, int, int, int, cell, int, int, int) $self, (slice, int, int, int) $config) impure inline {
+    var ($self'owner, $self'terms, $self'resolutionTime, $self'entries_limit, $self'pool_locked, $self'event_entries, $self'prize_pool, $self'lockTime, $self'created_at) = $self;
+    var ($config'terms, $config'prize_pool, $config'resolutionTime, $config'entries_limit) = $config;
+    ($self'owner, $self'terms, $self'resolutionTime, $self'entries_limit, $self'pool_locked, $self'event_entries, $self'prize_pool, $self'lockTime, $self'created_at)~$PredictionMarket$_fun_requireOwner();
+    $self'terms = $config'terms;
+    $self'prize_pool = $config'prize_pool;
+    $self'entries_limit = $config'entries_limit;
+    $self'resolutionTime = $config'resolutionTime;
+    return (($self'owner, $self'terms, $self'resolutionTime, $self'entries_limit, $self'pool_locked, $self'event_entries, $self'prize_pool, $self'lockTime, $self'created_at), ());
+}
+
+((slice, slice, int, int, int, cell, int, int, int), ()) $PredictionMarket$_internal_text_2fa01876c0df0467c022fb24eab169d83eefad3d759cad94b0d2c49f7caa0724((slice, slice, int, int, int, cell, int, int, int) $self) impure inline {
+    var ($self'owner, $self'terms, $self'resolutionTime, $self'entries_limit, $self'pool_locked, $self'event_entries, $self'prize_pool, $self'lockTime, $self'created_at) = $self;
+    var ($ctx'bounced, $ctx'sender, $ctx'value, $ctx'raw) = __tact_context_get();
+    throw_unless(32619, ( __tact_slice_eq_bits($self'owner, $ctx'sender) ));
+    $self'pool_locked = true;
+    ($self'owner, $self'terms, $self'resolutionTime, $self'entries_limit, $self'pool_locked, $self'event_entries, $self'prize_pool, $self'lockTime, $self'created_at)~$PredictionMarket$_fun_reply(__gen_cell_comment_861f32ca5829ce3ca26cb5c9d52933eb8c9d1037bb0530e41c46d1d2720cc69d());
+    return (($self'owner, $self'terms, $self'resolutionTime, $self'entries_limit, $self'pool_locked, $self'event_entries, $self'prize_pool, $self'lockTime, $self'created_at), ());
+}
+
+((slice, slice, int, int, int, cell, int, int, int), ()) $PredictionMarket$_internal_text_393586d49b9a5b58877cda6a0e49a9cf72ab69dce0d3d579d6af793dd4a477f1((slice, slice, int, int, int, cell, int, int, int) $self) impure inline {
+    var ($self'owner, $self'terms, $self'resolutionTime, $self'entries_limit, $self'pool_locked, $self'event_entries, $self'prize_pool, $self'lockTime, $self'created_at) = $self;
+    var ($ctx'bounced, $ctx'sender, $ctx'value, $ctx'raw) = __tact_context_get();
+    throw_unless(56666, ( __tact_slice_eq_bits($self'owner, $ctx'sender) ));
+    $global_send($SendParameters$_constructor_to_bounce_value_mode($self'owner, true, 0, (128 + 32)));
+    return (($self'owner, $self'terms, $self'resolutionTime, $self'entries_limit, $self'pool_locked, $self'event_entries, $self'prize_pool, $self'lockTime, $self'created_at), ());
+}
+
+(((slice, slice, int, int, int, cell, int, int, int)), ()) $PredictionMarket$_internal_binary_EventEntryMessage((slice, slice, int, int, int, cell, int, int, int) $self, (slice, int, int, slice, slice) $entry) impure inline {
+    var ($self'owner, $self'terms, $self'resolutionTime, $self'entries_limit, $self'pool_locked, $self'event_entries, $self'prize_pool, $self'lockTime, $self'created_at) = $self;
+    var ($entry'address, $entry'amount, $entry'prediction, $entry'name, $entry'message) = $entry;
+    int $entryReceivedAt = now();
+    $self'event_entries~__tact_dict_set_slice_cell(267, $entry'address, $EventEntry$_store_cell($EventEntry$_constructor_address_amount_prediction_timestamp_name_message($entry'address, $entry'amount, $entry'prediction, $entryReceivedAt, $entry'name, $entry'message)));
+    ($self'owner, $self'terms, $self'resolutionTime, $self'entries_limit, $self'pool_locked, $self'event_entries, $self'prize_pool, $self'lockTime, $self'created_at)~$PredictionMarket$_fun_accept_prize_pool($entry'amount);
+    return (($self'owner, $self'terms, $self'resolutionTime, $self'entries_limit, $self'pool_locked, $self'event_entries, $self'prize_pool, $self'lockTime, $self'created_at), ());
+}
+
+(((slice, slice, int, int, int, cell, int, int, int)), ()) $PredictionMarket$_internal_binary_Deploy((slice, slice, int, int, int, cell, int, int, int) $self, (int) $deploy) impure inline {
+    var ($self'owner, $self'terms, $self'resolutionTime, $self'entries_limit, $self'pool_locked, $self'event_entries, $self'prize_pool, $self'lockTime, $self'created_at) = $self;
+    var ($deploy'queryId) = $deploy;
+    ($self'owner, $self'terms, $self'resolutionTime, $self'entries_limit, $self'pool_locked, $self'event_entries, $self'prize_pool, $self'lockTime, $self'created_at)~$PredictionMarket$_fun_notify($DeployOk$_store_cell($DeployOk$_constructor_queryId($deploy'queryId)));
+    return (($self'owner, $self'terms, $self'resolutionTime, $self'entries_limit, $self'pool_locked, $self'event_entries, $self'prize_pool, $self'lockTime, $self'created_at), ());
+}
+
+;;
+;; Get methods of a Contract PredictionMarket
+;;
+
+_ %balance() method_id(104128) {
+    var self = $PredictionMarket$_contract_load();
+    var res = self~$PredictionMarket$_fun_balance();
+    return res;
+}
+
+_ %prize_pool() method_id(81504) {
+    var self = $PredictionMarket$_contract_load();
+    var res = self~$PredictionMarket$_fun_prize_pool();
+    return res;
+}
+
+_ %owner() method_id(83229) {
+    var self = $PredictionMarket$_contract_load();
+    var res = self~$PredictionMarket$_fun_owner();
+    return res;
+}
+
+_ %full_stats() method_id(94644) {
+    var self = $PredictionMarket$_contract_load();
+    var res = self~$PredictionMarket$_fun_full_stats();
+    return $EventStats$_to_external(res);
+}
+
+_ supported_interfaces() method_id {
+    return (
+        "org.ton.introspection.v0"H >> 128,
+        "org.ton.abi.ipfs.v0"H >> 128,
+        "org.ton.deploy.lazy.v0"H >> 128,
+        "org.ton.chain.workchain.v0"H >> 128,
+        "org.ton.ownable"H >> 128
+    );
+}
+
+_ get_abi_ipfs() method_id {
+    return "ipfs://QmPk3qKB1PAS8aSyUEv9fby8KNYVoDQduHzvLg1jUVu11P";
+}
+
+_ lazy_deployment_completed() method_id {
+    return get_data().begin_parse().load_int(1);
+}
+
+;;
+;; Routing of a Contract PredictionMarket
+;;
+
+((slice, slice, int, int, int, cell, int, int, int), int) $PredictionMarket$_contract_router_internal((slice, slice, int, int, int, cell, int, int, int) self, int msg_bounced, slice in_msg) impure inline_ref {
+    ;; Handle bounced messages
+    if (msg_bounced) {
+        return (self, true);
+    }
+    
+    ;; Parse incoming message
+    int op = 0;
+    if (slice_bits(in_msg) >= 32) {
+        op = in_msg.preload_uint(32);
+    }
+    
+    
+    ;; Receive empty message
+    if ((op == 0) & (slice_bits(in_msg) <= 32)) {
+        self~%$PredictionMarket$_internal_empty();
+        return (self, true);
+    }
+    
+    ;; Receive EventConfigMessage message
+    if (op == 3442178650) {
+        var msg = in_msg~$EventConfigMessage$_load();
+        self~$PredictionMarket$_internal_binary_EventConfigMessage(msg);
+        return (self, true);
+    }
+    
+    ;; Receive EventEntryMessage message
+    if (op == 120378075) {
+        var msg = in_msg~$EventEntryMessage$_load();
+        self~$PredictionMarket$_internal_binary_EventEntryMessage(msg);
+        return (self, true);
+    }
+    
+    ;; Receive Deploy message
+    if (op == 2490013878) {
+        var msg = in_msg~$Deploy$_load();
+        self~$PredictionMarket$_internal_binary_Deploy(msg);
+        return (self, true);
+    }
+    
+    ;; Text Receivers
+    if (op == 0) {
+        var text_op = slice_hash(in_msg);
+        
+        ;; Receive "lockPool" message
+        if (text_op == 0x2fa01876c0df0467c022fb24eab169d83eefad3d759cad94b0d2c49f7caa0724) {
+            self~$PredictionMarket$_internal_text_2fa01876c0df0467c022fb24eab169d83eefad3d759cad94b0d2c49f7caa0724();
+            return (self, true);
+        }
+        
+        ;; Receive "cancelEvent" message
+        if (text_op == 0x393586d49b9a5b58877cda6a0e49a9cf72ab69dce0d3d579d6af793dd4a477f1) {
+            self~$PredictionMarket$_internal_text_393586d49b9a5b58877cda6a0e49a9cf72ab69dce0d3d579d6af793dd4a477f1();
+            return (self, true);
+        }
+    }
+    
+    return (self, false);
+}
+
+() recv_internal(int msg_value, cell in_msg_cell, slice in_msg) impure {
+    
+    ;; Context
+    var cs = in_msg_cell.begin_parse();
+    var msg_flags = cs~load_uint(4);
+    var msg_bounced = -(msg_flags & 1);
+    slice msg_sender_addr = __tact_verify_address(cs~load_msg_addr());
+    __tact_context = (msg_bounced, msg_sender_addr, msg_value, cs);
+    __tact_context_sender = msg_sender_addr;
+    
+    ;; Load contract data
+    var self = $PredictionMarket$_contract_load();
+    
+    ;; Handle operation
+    int handled = self~$PredictionMarket$_contract_router_internal(msg_bounced, in_msg);
+    
+    ;; Throw if not handled
+    throw_unless(130, handled);
+    
+    ;; Persist state
+    $PredictionMarket$_contract_store(self);
+}

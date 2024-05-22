@@ -1,0 +1,185 @@
+;;
+;; Type: StateInit
+;; TLB: _ code:^cell data:^cell = StateInit
+;;
+
+((cell, cell)) $StateInit$_not_null(tuple v) inline {
+    throw_if(128, null?(v));
+    var (cell vvv'code, cell vvv'data) = __tact_tuple_destroy_2(v);
+    return (vvv'code, vvv'data);
+}
+
+;;
+;; Type: SendParameters
+;; TLB: _ bounce:bool to:address value:int257 mode:int257 body:Maybe ^cell code:Maybe ^cell data:Maybe ^cell = SendParameters
+;;
+
+((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_to_bounce_value_mode(slice to, int bounce, int value, int mode) inline {
+    return (bounce, to, value, mode, null(), null(), null());
+}
+
+((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_bounce_to_value_mode_body_code_data(int bounce, slice to, int value, int mode, cell body, cell code, cell data) inline {
+    return (bounce, to, value, mode, body, code, data);
+}
+
+;;
+;; Type: Deploy
+;; Header: 0x946a98b6
+;; TLB: deploy#946a98b6 queryId:uint64 = Deploy
+;;
+
+(slice, ((int))) $Deploy$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 2490013878);
+    var v'queryId = sc_0~load_uint(64);
+    return (sc_0, (v'queryId));
+}
+
+;;
+;; Type: DeployOk
+;; Header: 0xaff90f57
+;; TLB: deploy_ok#aff90f57 queryId:uint64 = DeployOk
+;;
+
+builder $DeployOk$_store(builder build_0, (int) v) inline {
+    var (v'queryId) = v;
+    build_0 = store_uint(build_0, 2952335191, 32);
+    build_0 = build_0.store_uint(v'queryId, 64);
+    return build_0;
+}
+
+cell $DeployOk$_store_cell((int) v) inline {
+    return $DeployOk$_store(begin_cell(), v).end_cell();
+}
+
+((int)) $DeployOk$_constructor_queryId(int queryId) inline {
+    return (queryId);
+}
+
+;;
+;; Type: EventConfigMessage
+;; Header: 0xcd2b7a5a
+;; TLB: event_config_message#cd2b7a5a terms:^string prize_pool:coins resolutionTime:int32 entries_limit:int16 = EventConfigMessage
+;;
+
+(slice, ((slice, int, int, int))) $EventConfigMessage$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 3442178650);
+    var v'terms = sc_0~load_ref().begin_parse();
+    var v'prize_pool = sc_0~load_coins();
+    var v'resolutionTime = sc_0~load_int(32);
+    var v'entries_limit = sc_0~load_int(16);
+    return (sc_0, (v'terms, v'prize_pool, v'resolutionTime, v'entries_limit));
+}
+
+;;
+;; Type: EventEntryMessage
+;; Header: 0x072cd2db
+;; TLB: event_entry_message#072cd2db address:address amount:int32 prediction:int16 name:Maybe ^string message:Maybe ^string = EventEntryMessage
+;;
+
+(slice, ((slice, int, int, slice, slice))) $EventEntryMessage$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 120378075);
+    var v'address = sc_0~__tact_load_address();
+    var v'amount = sc_0~load_int(32);
+    var v'prediction = sc_0~load_int(16);
+    var v'name = sc_0~load_int(1) ? sc_0~load_ref().begin_parse() : null();
+    var v'message = sc_0~load_int(1) ? sc_0~load_ref().begin_parse() : null();
+    return (sc_0, (v'address, v'amount, v'prediction, v'name, v'message));
+}
+
+;;
+;; Type: EventEntry
+;; TLB: _ address:address amount:int32 prediction:int16 timestamp:int32 name:Maybe ^string message:Maybe ^string = EventEntry
+;;
+
+builder $EventEntry$_store(builder build_0, (slice, int, int, int, slice, slice) v) inline_ref {
+    var (v'address, v'amount, v'prediction, v'timestamp, v'name, v'message) = v;
+    build_0 = __tact_store_address(build_0, v'address);
+    build_0 = build_0.store_int(v'amount, 32);
+    build_0 = build_0.store_int(v'prediction, 16);
+    build_0 = build_0.store_int(v'timestamp, 32);
+    build_0 = ~ null?(v'name) ? build_0.store_int(true, 1).store_ref(begin_cell().store_slice(v'name).end_cell()) : build_0.store_int(false, 1);
+    build_0 = ~ null?(v'message) ? build_0.store_int(true, 1).store_ref(begin_cell().store_slice(v'message).end_cell()) : build_0.store_int(false, 1);
+    return build_0;
+}
+
+cell $EventEntry$_store_cell((slice, int, int, int, slice, slice) v) inline {
+    return $EventEntry$_store(begin_cell(), v).end_cell();
+}
+
+((slice, int, int, int, slice, slice)) $EventEntry$_constructor_address_amount_prediction_timestamp_name_message(slice address, int amount, int prediction, int timestamp, slice name, slice message) inline {
+    return (address, amount, prediction, timestamp, name, message);
+}
+
+;;
+;; Type: EventStats
+;; TLB: _ created_at:int32 owner:address terms:^string resolutionTime:Maybe int32 entries_limit:int16 pool_locked:bool event_entries:dict<address, ^EventEntry{address:address,amount:int32,prediction:int16,timestamp:int32,name:Maybe ^string,message:Maybe ^string}> prize_pool:coins lockTime:Maybe int32 = EventStats
+;;
+
+(int, slice, slice, int, int, int, cell, int, int) $EventStats$_to_external(((int, slice, slice, int, int, int, cell, int, int)) v) inline {
+    var (v'created_at, v'owner, v'terms, v'resolutionTime, v'entries_limit, v'pool_locked, v'event_entries, v'prize_pool, v'lockTime) = v; 
+    return (v'created_at, v'owner, v'terms, v'resolutionTime, v'entries_limit, v'pool_locked, v'event_entries, v'prize_pool, v'lockTime);
+}
+
+((int, slice, slice, int, int, int, cell, int, int)) $EventStats$_constructor_created_at_owner_terms_resolutionTime_entries_limit_pool_locked_event_entries_prize_pool_lockTime(int created_at, slice owner, slice terms, int resolutionTime, int entries_limit, int pool_locked, cell event_entries, int prize_pool, int lockTime) inline {
+    return (created_at, owner, terms, resolutionTime, entries_limit, pool_locked, event_entries, prize_pool, lockTime);
+}
+
+;;
+;; Type: PredictionMarket
+;;
+
+builder $PredictionMarket$_store(builder build_0, (slice, slice, int, int, int, cell, int, int, int) v) inline {
+    var (v'owner, v'terms, v'resolutionTime, v'entries_limit, v'pool_locked, v'event_entries, v'prize_pool, v'lockTime, v'created_at) = v;
+    build_0 = __tact_store_address(build_0, v'owner);
+    build_0 = build_0.store_ref(begin_cell().store_slice(v'terms).end_cell());
+    build_0 = build_0.store_int(v'resolutionTime, 32);
+    build_0 = build_0.store_int(v'entries_limit, 16);
+    build_0 = build_0.store_int(v'pool_locked, 1);
+    build_0 = build_0.store_dict(v'event_entries);
+    build_0 = build_0.store_coins(v'prize_pool);
+    build_0 = ~ null?(v'lockTime) ? build_0.store_int(true, 1).store_int(v'lockTime, 32) : build_0.store_int(false, 1);
+    build_0 = build_0.store_int(v'created_at, 32);
+    return build_0;
+}
+
+(slice, ((slice, slice, int, int, int, cell, int, int, int))) $PredictionMarket$_load(slice sc_0) inline {
+    var v'owner = sc_0~__tact_load_address();
+    var v'terms = sc_0~load_ref().begin_parse();
+    var v'resolutionTime = sc_0~load_int(32);
+    var v'entries_limit = sc_0~load_int(16);
+    var v'pool_locked = sc_0~load_int(1);
+    var v'event_entries = sc_0~load_dict();
+    var v'prize_pool = sc_0~load_coins();
+    var v'lockTime = sc_0~load_int(1) ? sc_0~load_int(32) : null();
+    var v'created_at = sc_0~load_int(32);
+    return (sc_0, (v'owner, v'terms, v'resolutionTime, v'entries_limit, v'pool_locked, v'event_entries, v'prize_pool, v'lockTime, v'created_at));
+}
+
+(slice, ((slice, (slice, int, int, int)))) $PredictionMarket$init$_load(slice sc_0) inline {
+    var v'owner = sc_0~__tact_load_address();
+    var v'config = sc_0~$EventConfigMessage$_load();
+    return (sc_0, (v'owner, v'config));
+}
+
+(slice, slice, int, int, int, cell, int, int, int) $PredictionMarket$_contract_load() impure inline_ref {
+    slice $sc = get_data().begin_parse();
+    __tact_context_sys = $sc~load_ref();
+    int $loaded = $sc~load_int(1);
+    if ($loaded) {
+        return $sc~$PredictionMarket$_load();
+    } else {
+        ;; Allow only workchain deployments
+        throw_unless(137, my_address().preload_uint(11) == 1024);
+        (slice owner, (slice, int, int, int) config) = $sc~$PredictionMarket$init$_load();
+        $sc.end_parse();
+        return $PredictionMarket$_contract_init(owner, config);
+    }
+}
+
+() $PredictionMarket$_contract_store((slice, slice, int, int, int, cell, int, int, int) v) impure inline {
+    builder b = begin_cell();
+    b = b.store_ref(__tact_context_sys);
+    b = b.store_int(true, 1);
+    b = $PredictionMarket$_store(b, v);
+    set_data(b.end_cell());
+}
