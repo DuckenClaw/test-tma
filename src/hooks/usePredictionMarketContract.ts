@@ -30,7 +30,7 @@ export function usePredictionMarketContract() {
         sendEntry: () => {
           const entryMessage: EventEntryMessage = {
             $$type: "EventEntryMessage",
-            address: sender?.address,
+            address: sender?.address!,
             amount: toNano(entryAmount),
             prediction: BigInt(prediction),
             name: "testUser",
